@@ -77,4 +77,38 @@ plot(pacf(arima(TFRa,order=c(15,1,0))$resid,lag=45))
 arima(TFRa,order=c(16,1,1))
 #Have significent spike on lag16,reject
 
+## Model TLB ####
+plot(TLBa)
+unitroot_kpss(TLBa)
+#Have a obvious trend
+
+plot(diff(TLBa))
+unitroot_kpss(diff(TLBa))
+#The first difference of TLB is stationary
+plot(acf(diff(TLBa),lag=45))
+plot(pacf(diff(TLBa),lag=45))
+#Have significant spike on lag13, so initial model is ARIMA(13,1,0)
+
+plot(acf(arima(TLBa,order = c(13,1,0))$resid,lag=45))
+plot(pacf(arima(TLBa,order = c(13,1,0))$resid,lag=45))
+#Have a marginally significant spike on lag16
+plot(acf(arima(TLBa,order = c(13,1,1))$resid,lag=45))
+plot(pacf(arima(TLBa,order = c(13,1,1))$resid,lag=45))
+arima(TLBa,order = c(13,1,1))
+
+plot(acf(arima(TLBa,order = c(12,1,1))$resid,lag=45))
+plot(pacf(arima(TLBa,order = c(12,1,1))$resid,lag=45))
+#Have a significant spike on lag14
+
+plot(acf(arima(TLBa,order = c(12,1,2))$resid,lag=45))
+plot(pacf(arima(TLBa,order = c(12,1,2))$resid,lag=45))
+#Have a significant spike on lag14
+
+plot(acf(arima(TLBa,order = c(13,1,2))$resid,lag=45))
+plot(pacf(arima(TLBa,order = c(13,1,2))$resid,lag=45))
+arima(TLBa,order = c(13,1,2))
+
+plot(acf(arima(TLBa,order = c(13,1,3))$resid,lag=45))
+plot(pacf(arima(TLBa,order = c(13,1,3))$resid,lag=45))
+arima(TLBa,order = c(13,1,3))
 
