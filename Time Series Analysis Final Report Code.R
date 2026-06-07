@@ -217,7 +217,6 @@ pacf(arima(TFRa,order = c(0,1,4),seasonal = list(order=c(1,1,0),period = 12))$re
 #Valid
 
 
-
 ## TLB ####
 acf(diff(diff(TLBa),12),lag=45)
 pacf(diff(diff(TLBa),12),lag=45)
@@ -263,7 +262,6 @@ arima(TLBa,order = c(0,1,3),seasonal = list(order=c(1,1,0),period = 12))
 acf(arima(TLBa,order = c(0,1,2),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
 pacf(arima(TLBa,order = c(0,1,2),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
 #Invalid: Significant spike on lag 4
-
 
 # Forecasting ####
 
@@ -418,6 +416,7 @@ fit_TFR_1610 <- arima(TFRa, order = c(16, 1, 0))
 pred_TFR_1610 <- predict(fit_TFR_1610, n.ahead = length(TFRb))$pred
 fit_TFR_1610$aic
 mean((pred_TFR_1610 - TFRb)^2)
+sqrt(mean((pred_TFR_1610 - TFRb)^2))
 mean(abs(pred_TFR_1610 - TFRb))
 
 
@@ -425,6 +424,7 @@ fit_TFR_1611 <- arima(TFRa, order = c(16, 1, 1))
 pred_TFR_1611 <- predict(fit_TFR_1611, n.ahead = length(TFRb))$pred
 fit_TFR_1611$aic
 mean((pred_TFR_1611 - TFRb)^2)
+sqrt(mean((pred_TFR_1611 - TFRb)^2))
 mean(abs(pred_TFR_1611 - TFRb))
 
 
@@ -432,6 +432,7 @@ fit_TFR_1511 <- arima(TFRa, order = c(15, 1, 1))
 pred_TFR_1511 <- predict(fit_TFR_1511, n.ahead = length(TFRb))$pred
 fit_TFR_1511$aic
 mean((pred_TFR_1511 - TFRb)^2)
+sqrt(mean((pred_TFR_1511 - TFRb)^2))
 mean(abs(pred_TFR_1511 - TFRb))
 
 
@@ -439,6 +440,7 @@ fit_TFR_1413 <- arima(TFRa, order = c(14, 1, 3))
 pred_TFR_1413 <- predict(fit_TFR_1413, n.ahead = length(TFRb))$pred
 fit_TFR_1413$aic
 mean((pred_TFR_1413 - TFRb)^2)
+sqrt(mean((pred_TFR_1413 - TFRb)^2))
 mean(abs(pred_TFR_1413 - TFRb))
 
 
@@ -446,6 +448,7 @@ fit_TFR_1313 <- arima(TFRa, order = c(13, 1, 3))
 pred_TFR_1313 <- predict(fit_TFR_1313, n.ahead = length(TFRb))$pred
 fit_TFR_1313$aic
 mean((pred_TFR_1313 - TFRb)^2)
+sqrt(mean((pred_TFR_1313 - TFRb)^2))
 mean(abs(pred_TFR_1313 - TFRb))
 
 ### TLB non-seasonal models ####
@@ -453,7 +456,8 @@ mean(abs(pred_TFR_1313 - TFRb))
 fit_TLB_1311 <- arima(TLBa, order = c(13, 1, 1))
 pred_TLB_1311 <- predict(fit_TLB_1311, n.ahead = length(TLBb))$pred
 fit_TLB_1311$aic
-mean((pred_TLB_1311 - TLBb)^2)
+mean((pred_TLB_1311 - TFRb)^2)
+sqrt(mean((pred_TLB_1311 - TLBb)^2))
 mean(abs(pred_TLB_1311 - TLBb))
 
 
@@ -461,6 +465,7 @@ fit_TLB_1312 <- arima(TLBa, order = c(13, 1, 2))
 pred_TLB_1312 <- predict(fit_TLB_1312, n.ahead = length(TLBb))$pred
 fit_TLB_1312$aic
 mean((pred_TLB_1312 - TLBb)^2)
+sqrt(mean((pred_TLB_1312 - TLBb)^2))
 mean(abs(pred_TLB_1312 - TLBb))
 
 
@@ -468,6 +473,7 @@ fit_TLB_1313 <- arima(TLBa, order = c(13, 1, 3))
 pred_TLB_1313 <- predict(fit_TLB_1313, n.ahead = length(TLBb))$pred
 fit_TLB_1313$aic
 mean((pred_TLB_1313 - TLBb)^2)
+sqrt(mean((pred_TLB_1313 - TLBb)^2))
 mean(abs(pred_TLB_1313 - TLBb))
 
 
@@ -475,6 +481,7 @@ fit_TLB_1314 <- arima(TLBa, order = c(13, 1, 4))
 pred_TLB_1314 <- predict(fit_TLB_1314, n.ahead = length(TLBb))$pred
 fit_TLB_1314$aic
 mean((pred_TLB_1314 - TLBb)^2)
+sqrt(mean((pred_TLB_1314 - TLBb)^2))
 mean(abs(pred_TLB_1314 - TLBb))
 
 ### TFR seasonal models ####
@@ -487,6 +494,7 @@ fit_TFR_s_510 <- arima(
 pred_TFR_s_510 <- predict(fit_TFR_s_510, n.ahead = length(TFRb))$pred
 fit_TFR_s_510$aic
 mean((pred_TFR_s_510 - TFRb)^2)
+sqrt(mean((pred_TFR_s_510 - TFRb)^2))
 mean(abs(pred_TFR_s_510 - TFRb))
 
 
@@ -498,6 +506,7 @@ fit_TFR_s_313 <- arima(
 pred_TFR_s_313 <- predict(fit_TFR_s_313, n.ahead = length(TFRb))$pred
 fit_TFR_s_313$aic
 mean((pred_TFR_s_313 - TFRb)^2)
+sqrt(mean((pred_TFR_s_313 - TFRb)^2))
 mean(abs(pred_TFR_s_313 - TFRb))
 
 
@@ -509,6 +518,7 @@ fit_TFR_s_213 <- arima(
 pred_TFR_s_213 <- predict(fit_TFR_s_213, n.ahead = length(TFRb))$pred
 fit_TFR_s_213$aic
 mean((pred_TFR_s_213 - TFRb)^2)
+sqrt(mean((pred_TFR_s_213 - TFRb)^2))
 mean(abs(pred_TFR_s_213 - TFRb))
 
 
@@ -520,38 +530,66 @@ fit_TFR_s_014 <- arima(
 pred_TFR_s_014 <- predict(fit_TFR_s_014, n.ahead = length(TFRb))$pred
 fit_TFR_s_014$aic
 mean((pred_TFR_s_014 - TFRb)^2)
+sqrt(mean((pred_TFR_s_014 - TFRb)^2))
 mean(abs(pred_TFR_s_014 - TFRb))
 
+### TLB seasonal models ####
 
-### TLB non-seasonal models ####
-
-fit_TLB_1311 <- arima(TLBa, order = c(13, 1, 1))
-pred_TLB_1311 <- predict(fit_TLB_1311, n.ahead = length(TLBb))$pred
-fit_TLB_1311$aic
-mean((pred_TLB_1311 - TLBb)^2)
-mean(abs(pred_TLB_1311 - TLBb))
-
-
-fit_TLB_1312 <- arima(TLBa, order = c(13, 1, 2))
-pred_TLB_1312 <- predict(fit_TLB_1312, n.ahead = length(TLBb))$pred
-fit_TLB_1312$aic
-mean((pred_TLB_1312 - TLBb)^2)
-mean(abs(pred_TLB_1312 - TLBb))
+fit_TLB_s_410 <- arima(
+  TLBa,
+  order = c(4, 1, 0),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TLB_s_410 <- predict(fit_TLB_s_410, n.ahead = length(TLBb))$pred
+fit_TLB_s_410$aic
+mean((pred_TLB_s_410 - TLBb)^2)
+sqrt(mean((pred_TLB_s_410 - TLBb)^2))
+mean(abs(pred_TLB_s_410 - TLBb))
 
 
-fit_TLB_1313 <- arima(TLBa, order = c(13, 1, 3))
-pred_TLB_1313 <- predict(fit_TLB_1313, n.ahead = length(TLBb))$pred
-fit_TLB_1313$aic
-mean((pred_TLB_1313 - TLBb)^2)
-mean(abs(pred_TLB_1313 - TLBb))
+fit_TLB_s_311 <- arima(
+  TLBa,
+  order = c(3, 1, 1),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TLB_s_311 <- predict(fit_TLB_s_311, n.ahead = length(TLBb))$pred
+fit_TLB_s_311$aic
+mean((pred_TLB_s_311 - TLBb)^2)
+sqrt(mean((pred_TLB_s_311 - TLBb)^2))
+mean(abs(pred_TLB_s_311 - TLBb))
 
 
-fit_TLB_1314 <- arima(TLBa, order = c(13, 1, 4))
-pred_TLB_1314 <- predict(fit_TLB_1314, n.ahead = length(TLBb))$pred
-fit_TLB_1314$aic
-mean((pred_TLB_1314 - TLBb)^2)
-mean(abs(pred_TLB_1314 - TLBb))
+fit_TLB_s_213 <- arima(
+  TLBa,
+  order = c(2, 1, 3),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TLB_s_213 <- predict(fit_TLB_s_213, n.ahead = length(TLBb))$pred
+fit_TLB_s_213$aic
+mean((pred_TLB_s_213 - TLBb)^2)
+sqrt(mean((pred_TLB_s_213 - TLBb)^2))
+mean(abs(pred_TLB_s_213 - TLBb))
 
 
+fit_TLB_s_113 <- arima(
+  TLBa,
+  order = c(1, 1, 3),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TLB_s_113 <- predict(fit_TLB_s_113, n.ahead = length(TLBb))$pred
+fit_TLB_s_113$aic
+mean((pred_TLB_s_113 - TLBb)^2)
+sqrt(mean((pred_TLB_s_113 - TLBb)^2))
+mean(abs(pred_TLB_s_113 - TLBb))
 
 
+fit_TLB_s_013 <- arima(
+  TLBa,
+  order = c(0, 1, 3),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TLB_s_013 <- predict(fit_TLB_s_013, n.ahead = length(TLBb))$pred
+fit_TLB_s_013$aic
+mean((pred_TLB_s_013 - TLBb)^2)
+sqrt(mean((pred_TLB_s_013 - TLBb)^2))
+mean(abs(pred_TLB_s_013 - TLBb))
