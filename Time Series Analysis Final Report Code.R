@@ -267,7 +267,291 @@ pacf(arima(TLBa,order = c(0,1,2),seasonal = list(order=c(1,1,0),period = 12))$re
 
 # Forecasting ####
 
+## Plot ####
+### Helper function: fit models and get forecast data####
+get_forecast_df <- function(train_ts, test_ts, model_specs) {
+  years <- as.numeric(time(test_ts))
+  
+  out <- data.frame(Year = years, Actual = as.numeric(test_ts))
+  
+  for (model_name in names(model_specs)) {
+    spec <- model_specs[[model_name]]
+    
+    if (is.null(spec$seasonal)) {
+      fit <- arima(train_ts, order = spec$order)
+    } else {
+      fit <- arima(train_ts, order = spec$order, seasonal = spec$seasonal)
+    }
+    
+    pred <- predict(fit, n.ahead = length(test_ts))$pred
+    out[[model_name]] <- as.numeric(pred)
+  }
+  
+  out
+}
 
-# TFR model fitted on training data
+# Helper function: plot actual vs forecasts
+plot_forecast_compare <- function(df, title_text, ylab_text) {
+  df_long <- df %>%
+    pivot_longer(
+      cols = -Year,
+      names_to = "Series",
+      values_to = "Value"
+    )
+  
+  ggplot(df_long, aes(x = Year, y = Value, colour = Series, linetype = Series)) +
+    geom_line(linewidth = 1) +
+    labs(
+      title = title_text,
+      x = "Year",
+      y = ylab_text,
+      colour = "",
+      linetype = ""
+    ) +
+    theme_minimal()
+}
+
+### TFR non-seasonal models ####
+TFR_nonseasonal_models <- list(
+  "Actual" = NULL,   # placeholder, not used in fitting
+  "ARIMA(16,1,0)" = list(order = c(16, 1, 0), seasonal = NULL),
+  "ARIMA(16,1,1)" = list(order = c(16, 1, 1), seasonal = NULL),
+  "ARIMA(15,1,1)" = list(order = c(15, 1, 1), seasonal = NULL),
+  "ARIMA(14,1,3)" = list(order = c(14, 1, 3), seasonal = NULL),
+  "ARIMA(13,1,3)" = list(order = c(13, 1, 3), seasonal = NULL)
+)
+
+# remove placeholder before fitting
+TFR_nonseasonal_models_fit <- TFR_nonseasonal_models[names(TFR_nonseasonal_models) != "Actual"]
+
+TFR_nonseasonal_df <- get_forecast_df(TFRa, TFRb, TFR_nonseasonal_models_fit)
+
+plot_forecast_compare(
+  TFR_nonseasonal_df,
+  title_text = "TFR Non-seasonal Models: Forecast vs Actual (2013-2025)",
+  ylab_text = "Total Fertility Rate"
+)
+
+### TLB non-seasonal models ####
+TLB_nonseasonal_models <- list(
+  "ARIMA(13,1,1)" = list(order = c(13, 1, 1), seasonal = NULL),
+  "ARIMA(13,1,2)" = list(order = c(13, 1, 2), seasonal = NULL),
+  "ARIMA(13,1,3)" = list(order = c(13, 1, 3), seasonal = NULL),
+  "ARIMA(13,1,4)" = list(order = c(13, 1, 4), seasonal = NULL)
+)
+
+TLB_nonseasonal_df <- get_forecast_df(TLBa, TLBb, TLB_nonseasonal_models)
+
+plot_forecast_compare(
+  TLB_nonseasonal_df,
+  title_text = "TLB Non-seasonal Models: Forecast vs Actual (2013-2025)",
+  ylab_text = "Total Live Births"
+)
+
+
+### TFR seasonal models ####
+TFR_seasonal_models <- list(
+  "ARIMA(5,1,0)(1,1,0)[12]" = list(
+    order = c(5, 1, 0),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  ),
+  "ARIMA(3,1,3)(1,1,0)[12]" = list(
+    order = c(3, 1, 3),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  ),
+  "ARIMA(2,1,3)(1,1,0)[12]" = list(
+    order = c(2, 1, 3),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  ),
+  "ARIMA(0,1,4)(1,1,0)[12]" = list(
+    order = c(0, 1, 4),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  )
+)
+
+TFR_seasonal_df <- get_forecast_df(TFRa, TFRb, TFR_seasonal_models)
+
+plot_forecast_compare(
+  TFR_seasonal_df,
+  title_text = "TFR Seasonal Models: Forecast vs Actual (2013-2025)",
+  ylab_text = "Total Fertility Rate"
+)
+
+
+### TLB seasonal models ####
+TLB_seasonal_models <- list(
+  "ARIMA(4,1,0)(1,1,0)[12]" = list(
+    order = c(4, 1, 0),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  ),
+  "ARIMA(3,1,1)(1,1,0)[12]" = list(
+    order = c(3, 1, 1),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  ),
+  "ARIMA(2,1,3)(1,1,0)[12]" = list(
+    order = c(2, 1, 3),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  ),
+  "ARIMA(1,1,3)(1,1,0)[12]" = list(
+    order = c(1, 1, 3),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  ),
+  "ARIMA(0,1,3)(1,1,0)[12]" = list(
+    order = c(0, 1, 3),
+    seasonal = list(order = c(1, 1, 0), period = 12)
+  )
+)
+
+TLB_seasonal_df <- get_forecast_df(TLBa, TLBb, TLB_seasonal_models)
+
+plot_forecast_compare(
+  TLB_seasonal_df,
+  title_text = "TLB Seasonal Models: Forecast vs Actual (2013-2025)",
+  ylab_text = "Total Live Births"
+)
+
+## MSE and MAE ####
+
+### TFR non-seasonal models ####
+
+fit_TFR_1610 <- arima(TFRa, order = c(16, 1, 0))
+pred_TFR_1610 <- predict(fit_TFR_1610, n.ahead = length(TFRb))$pred
+fit_TFR_1610$aic
+mean((pred_TFR_1610 - TFRb)^2)
+mean(abs(pred_TFR_1610 - TFRb))
+
+
+fit_TFR_1611 <- arima(TFRa, order = c(16, 1, 1))
+pred_TFR_1611 <- predict(fit_TFR_1611, n.ahead = length(TFRb))$pred
+fit_TFR_1611$aic
+mean((pred_TFR_1611 - TFRb)^2)
+mean(abs(pred_TFR_1611 - TFRb))
+
+
+fit_TFR_1511 <- arima(TFRa, order = c(15, 1, 1))
+pred_TFR_1511 <- predict(fit_TFR_1511, n.ahead = length(TFRb))$pred
+fit_TFR_1511$aic
+mean((pred_TFR_1511 - TFRb)^2)
+mean(abs(pred_TFR_1511 - TFRb))
+
+
+fit_TFR_1413 <- arima(TFRa, order = c(14, 1, 3))
+pred_TFR_1413 <- predict(fit_TFR_1413, n.ahead = length(TFRb))$pred
+fit_TFR_1413$aic
+mean((pred_TFR_1413 - TFRb)^2)
+mean(abs(pred_TFR_1413 - TFRb))
+
+
+fit_TFR_1313 <- arima(TFRa, order = c(13, 1, 3))
+pred_TFR_1313 <- predict(fit_TFR_1313, n.ahead = length(TFRb))$pred
+fit_TFR_1313$aic
+mean((pred_TFR_1313 - TFRb)^2)
+mean(abs(pred_TFR_1313 - TFRb))
+
+### TLB non-seasonal models ####
+
+fit_TLB_1311 <- arima(TLBa, order = c(13, 1, 1))
+pred_TLB_1311 <- predict(fit_TLB_1311, n.ahead = length(TLBb))$pred
+fit_TLB_1311$aic
+mean((pred_TLB_1311 - TLBb)^2)
+mean(abs(pred_TLB_1311 - TLBb))
+
+
+fit_TLB_1312 <- arima(TLBa, order = c(13, 1, 2))
+pred_TLB_1312 <- predict(fit_TLB_1312, n.ahead = length(TLBb))$pred
+fit_TLB_1312$aic
+mean((pred_TLB_1312 - TLBb)^2)
+mean(abs(pred_TLB_1312 - TLBb))
+
+
+fit_TLB_1313 <- arima(TLBa, order = c(13, 1, 3))
+pred_TLB_1313 <- predict(fit_TLB_1313, n.ahead = length(TLBb))$pred
+fit_TLB_1313$aic
+mean((pred_TLB_1313 - TLBb)^2)
+mean(abs(pred_TLB_1313 - TLBb))
+
+
+fit_TLB_1314 <- arima(TLBa, order = c(13, 1, 4))
+pred_TLB_1314 <- predict(fit_TLB_1314, n.ahead = length(TLBb))$pred
+fit_TLB_1314$aic
+mean((pred_TLB_1314 - TLBb)^2)
+mean(abs(pred_TLB_1314 - TLBb))
+
+### TFR seasonal models ####
+
+fit_TFR_s_510 <- arima(
+  TFRa,
+  order = c(5, 1, 0),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TFR_s_510 <- predict(fit_TFR_s_510, n.ahead = length(TFRb))$pred
+fit_TFR_s_510$aic
+mean((pred_TFR_s_510 - TFRb)^2)
+mean(abs(pred_TFR_s_510 - TFRb))
+
+
+fit_TFR_s_313 <- arima(
+  TFRa,
+  order = c(3, 1, 3),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TFR_s_313 <- predict(fit_TFR_s_313, n.ahead = length(TFRb))$pred
+fit_TFR_s_313$aic
+mean((pred_TFR_s_313 - TFRb)^2)
+mean(abs(pred_TFR_s_313 - TFRb))
+
+
+fit_TFR_s_213 <- arima(
+  TFRa,
+  order = c(2, 1, 3),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TFR_s_213 <- predict(fit_TFR_s_213, n.ahead = length(TFRb))$pred
+fit_TFR_s_213$aic
+mean((pred_TFR_s_213 - TFRb)^2)
+mean(abs(pred_TFR_s_213 - TFRb))
+
+
+fit_TFR_s_014 <- arima(
+  TFRa,
+  order = c(0, 1, 4),
+  seasonal = list(order = c(1, 1, 0), period = 12)
+)
+pred_TFR_s_014 <- predict(fit_TFR_s_014, n.ahead = length(TFRb))$pred
+fit_TFR_s_014$aic
+mean((pred_TFR_s_014 - TFRb)^2)
+mean(abs(pred_TFR_s_014 - TFRb))
+
+
+### TLB non-seasonal models ####
+
+fit_TLB_1311 <- arima(TLBa, order = c(13, 1, 1))
+pred_TLB_1311 <- predict(fit_TLB_1311, n.ahead = length(TLBb))$pred
+fit_TLB_1311$aic
+mean((pred_TLB_1311 - TLBb)^2)
+mean(abs(pred_TLB_1311 - TLBb))
+
+
+fit_TLB_1312 <- arima(TLBa, order = c(13, 1, 2))
+pred_TLB_1312 <- predict(fit_TLB_1312, n.ahead = length(TLBb))$pred
+fit_TLB_1312$aic
+mean((pred_TLB_1312 - TLBb)^2)
+mean(abs(pred_TLB_1312 - TLBb))
+
+
+fit_TLB_1313 <- arima(TLBa, order = c(13, 1, 3))
+pred_TLB_1313 <- predict(fit_TLB_1313, n.ahead = length(TLBb))$pred
+fit_TLB_1313$aic
+mean((pred_TLB_1313 - TLBb)^2)
+mean(abs(pred_TLB_1313 - TLBb))
+
+
+fit_TLB_1314 <- arima(TLBa, order = c(13, 1, 4))
+pred_TLB_1314 <- predict(fit_TLB_1314, n.ahead = length(TLBb))$pred
+fit_TLB_1314$aic
+mean((pred_TLB_1314 - TLBb)^2)
+mean(abs(pred_TLB_1314 - TLBb))
+
+
 
 
