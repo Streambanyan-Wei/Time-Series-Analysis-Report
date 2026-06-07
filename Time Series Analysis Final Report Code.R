@@ -217,14 +217,52 @@ pacf(arima(TFRa,order = c(0,1,4),seasonal = list(order=c(1,1,0),period = 12))$re
 #Valid
 
 
+
 ## TLB ####
 acf(diff(diff(TLBa),12),lag=45)
 pacf(diff(diff(TLBa),12),lag=45)
 
 
-acf(arima(TLBa,order = c(13,1,0),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
-pacf(arima(TLBa,order = c(13,1,0),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
-arima(TLBa,order = c(13,1,0),seasonal = list(order=c(1,1,0),period = 12))
+acf(arima(TLBa,order = c(4,1,0),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(4,1,0),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+arima(TLBa,order = c(4,1,0),seasonal = list(order=c(1,1,0),period = 12))
+#Valid
+
+acf(arima(TLBa,order = c(3,1,0),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(3,1,0),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+#Invalid: Significant spike on lag 4
+
+acf(arima(TLBa,order = c(3,1,1),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(3,1,1),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+arima(TLBa,order = c(3,1,1),seasonal = list(order=c(1,1,0),period = 12))
+#Valid
+
+acf(arima(TLBa,order = c(2,1,1),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(2,1,1),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+#Invalid: Significant spike on lag 4
+
+acf(arima(TLBa,order = c(2,1,2),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(2,1,2),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+#Invalid: Significant spike on lag 4
+
+acf(arima(TLBa,order = c(2,1,3),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(2,1,3),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+arima(TLBa,order = c(2,1,3),seasonal = list(order=c(1,1,0),period = 12))
+#Valid
+
+acf(arima(TLBa,order = c(1,1,3),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(1,1,3),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+arima(TLBa,order = c(1,1,3),seasonal = list(order=c(1,1,0),period = 12))
+#Valid
+
+acf(arima(TLBa,order = c(0,1,3),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(0,1,3),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+arima(TLBa,order = c(0,1,3),seasonal = list(order=c(1,1,0),period = 12))
+#Valid
+
+acf(arima(TLBa,order = c(0,1,2),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+pacf(arima(TLBa,order = c(0,1,2),seasonal = list(order=c(1,1,0),period = 12))$resid,lag=45)
+#Invalid: Significant spike on lag 4
 
 
 # Forecasting ####
