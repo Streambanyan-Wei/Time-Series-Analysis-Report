@@ -67,27 +67,6 @@ One important feature was that several models predicted a peak around 2024. This
 
 Overall, the findings suggest that Singapore's low fertility pattern is likely to continue in the short term, but exact future values should be interpreted with caution.
 
-## Repository Structure
-
-```text
-.
-├── BirthsAndFertilityRatesAnnual.csv
-├── README.md
-├── report/
-│   └── Time_Series_Analysis_Final_Report.pdf
-├── code/
-│   └── time_series_analysis.R
-├── Plots/
-│   ├── acf_*.png
-│   ├── pacf_*.png
-│   ├── forecast_non_seasonal_tfr.png
-│   ├── forecast_seasonal_tfr.png
-│   ├── forecast_non_seasonal_tlb.png
-│   └── forecast_seasonal_tlb.png
-└── references/
-    └── reference.bib
-```
-
 ## Software
 
 The analysis was conducted in R. The main R packages used were:
